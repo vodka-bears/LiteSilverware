@@ -1,4 +1,7 @@
-﻿LiteSilverware project is based on the NotFastEnuf Silverware firmware, AKA [NFE_Silverware](https://github.com/NotFastEnuf/NFE_Silverware), which has a big success on the brushed whoop FC board like Alienwhoop ZER0. Several features are included in order to support brushless drones.
+This fork  is created to fix some minor issues in the public source posted by BetaFPV. I have informed them about one or two bugs, but they havent updated the source, so I decided to fork my own changes here. Call this ReleaseCandidateFPV if you want :)
+
+From BetaFPV
+LiteSilverware project is based on the NotFastEnuf Silverware firmware, AKA [NFE_Silverware](https://github.com/NotFastEnuf/NFE_Silverware), which has a big success on the brushed whoop FC board like Alienwhoop ZER0. Several features are included in order to support brushless drones.
 
 1. Support brushless motor ESC firmware BLHeli_S.
 2. Support OSD interface, based on the [LiteOSD](https://github.com/BETAFPV/LiteOSD) project.
