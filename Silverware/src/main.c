@@ -52,6 +52,7 @@ THE SOFTWARE.
 #include "binary.h"
 #include "osd.h"
 #include "IIR_filter.h"
+#include "gestures.h"
 
 
 #include <stdio.h>
@@ -579,13 +580,20 @@ if( thrfilt > 0.1f )
 
     vbatt_comp = tempvolt + (float) VDROP_FACTOR * thrfilt; 	
 
+// check gestures
+    if ( onground && showcase == 0 )
+	  {
+	    gestures( );
+	  }
            
 
 if ( LED_NUMBER > 0)
 {
 // led flash logic	
     if ( lowbatt )
+		{
         ledflash ( 500000 , 8);
+		}
     else
     {
         if ( rxmode == RXMODE_BIND)
@@ -598,7 +606,7 @@ if ( LED_NUMBER > 0)
                     ledflash ( 500000, 15);			
                 }
             else 
-            {  
+            {
                 int leds_on = !aux[LEDS_ON];
                 if (ledcommand)
                 {
