@@ -16,12 +16,12 @@
 //#define Silverlite_Brushless
 //#define Alienwhoop_ZERO  
 //#define Lite_Brushless
-#define Lite_BrushlessRX
-//#define Lite_BrushedRX
+//#define Lite_BrushlessRX
+#define Lite_BrushedRX
 
-#define f042_1s_bl
+//#define f042_1s_bl
 //#define f042_2s_bl
-//#define f042_1s_bayang
+#define f042_1s_bayang
 
 //#define ENABLE_BARO
 
@@ -38,7 +38,7 @@
 // *************rate in deg/sec
 // *************for acro mode
 #define MAX_RATE 860.0          //Roll & Pitch axis
-#define MAX_RATEYAW 500.0       //Yaw axis (used in acro and leveling modes)
+#define MAX_RATEYAW 600.0       //Yaw axis (used in acro and leveling modes)
 
 // *************EXPO from 0.00 to 1.00 , 0 = no exp
 // *************positive = less sensitive near center 
@@ -114,7 +114,7 @@
 //*************channel is on, or racemodeHORIZON if both channels are on - and will be standard LEVELMODE if neither 
 //*************racemode or horizon are switched on.
 #define ARMING CHAN_5
-#define IDLE_UP CHAN_5
+#define IDLE_UP CHAN_12
 #define LEVELMODE CHAN_6
 #define RACEMODE  CHAN_7
 #define HORIZON   CHAN_8
@@ -170,7 +170,7 @@
 #define STOP_LOWBATTERY
 
 // *************voltage per cell to start warning led blinking
-#define VBATTLOW 3.5
+#define VBATTLOW 3.2
 
 // *************automatic voltage telemetry correction/calibration factor - change the values below if voltage telemetry is inaccurate
 // *************Corrects for an offset error in the telemetry measurement (same offset across the battery voltage range)
@@ -218,10 +218,10 @@
 
 
 //#define WEAK_FILTERING
-//#define STRONG_FILTERING
+#define STRONG_FILTERING
 //#define VERY_STRONG_FILTERING
 //#define ALIENWHOOP_ZERO_FILTERING
-#define BETA_FILTERING
+//#define BETA_FILTERING
 
 #ifdef BETA_FILTERING  //*** ABOVE 100 ADJUST IN INCRIMENTS OF 20, BELOW 100 ADJUST IN INCRIMENTS OF 10, nothing coded beyond 500hz
 
@@ -243,7 +243,6 @@
 #endif
 
 
-
 //**********************************************************************************************************************
 //***********************************************MOTOR OUTPUT SETTINGS**************************************************
 
@@ -251,7 +250,7 @@
 #define MOTOR_MIN_COMMAND  5.0
 
 // *************invert yaw pid for "PROPS OUT" configuration - This feature is switchable to "PROPS IN" when active with stick gesture DOWN-UP-DOWN, Save selection with DOWN-DOWN-DOWN
-//#define INVERT_YAW_PID
+#define INVERT_YAW_PID
 
 // *************pwm frequency for motor control
 // *************a higher frequency makes the motors more linear
