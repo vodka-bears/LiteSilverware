@@ -1,4 +1,6 @@
-This fork  is created to fix some minor issues in the public source posted by BetaFPV. I have informed them about one or two bugs, but they havent updated the source, so I decided to fork my own changes here. Call this ReleaseCandidateFPV if you want :)
+This fork  is created to customize the Lite FC V2.0 Firmware to my requirements. Major changes are to enable Telemetry in rx_sbus_dsmx_bayang_switch (note, this stops the FC being able to bind to the toy controller); and re-enable gestures so you can trigger calibration etc. If T8SG is set to Y via the OSD Configuration, then it will match regular NFE Silverware with rx_bayang_telemetry_autobind, and use_devo enabled. If T8SG is set to N then it will be the same as use_multi.
+
+My config is for Props Out. Use stick gesture D U D to switch to props in, and D D D to save if using props in.
 
 From BetaFPV
 LiteSilverware project is based on the NotFastEnuf Silverware firmware, AKA [NFE_Silverware](https://github.com/NotFastEnuf/NFE_Silverware), which has a big success on the brushed whoop FC board like Alienwhoop ZER0. Several features are included in order to support brushless drones.
