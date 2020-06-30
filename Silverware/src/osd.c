@@ -30,14 +30,13 @@ extern unsigned long lastlooptime;
 unsigned char profileAB =0;
 
 unsigned char powerlevel = 0;
-unsigned char channel = 0;
+unsigned char channel = 8;
 unsigned char powerleveltmp = 0;
 unsigned char channeltmp = 0;
 
 unsigned char mode = 0;
 unsigned char sa_flag = 0;
 unsigned char showcase = 0;
-unsigned char rx_switch = 0;
 int showcase_cnt = 0;
 unsigned char showcase_init=0;
 unsigned char low_bat_l=16;
@@ -59,6 +58,11 @@ unsigned char low_battery=33;
 unsigned char low_battery=68;
 #endif
 
+#ifdef f042_1s_bayang
+    unsigned char rx_switch = 0;
+#else
+    unsigned char rx_switch = 1;
+#endif
 
 unsigned int ratesValue=860;
 unsigned int ratesValueYaw = 500;
@@ -143,6 +147,7 @@ void osd_setting()
     
     switch(showcase)
     {
+        #ifdef f042_1s_bayang
         case 0:
             if(tx_config){
                 if(toy_AETR)
@@ -172,9 +177,37 @@ void osd_setting()
                     channeltmp = channel;
                     powerleveltmp = powerlevel;
                 }
+                if(osd_count >= 200)
+                {
+                    osd_data[0] = 0x0f;
+                    osd_data[0] |=showcase << 4;
+                    osd_data[1] = aux[CHAN_5];
+                    osd_data[2] = 0;
+                    osd_data[3] = vol >> 8;
+                    osd_data[4] = vol & 0xFF;
+                    osd_data[5] = rx_switch;
+                    
+                    osd_data[6] = 0;
+                    osd_data[6] = (aux[CHAN_6] << 0);
+       
+                    osd_data[7] = 0;
+                    osd_data[8] = 0;
+                    osd_data[9] = 0;
+                #ifdef CURR_ADC
+                    osd_data[8] = cur >> 8;
+                    osd_data[9] = cur & 0xFF;
+                #endif
+                    osd_data[10] = 0;
+                    osd_data[11] = 0;
+                    for (uint8_t i = 0; i < 11; i++)
+                        osd_data[11] += osd_data[i];  
+                    
+                    UART2_DMA_Send();
+                    osd_count = 0;
+                }   
             }
             else{
-                if(AETR)
+                if(!aux[ARMING] && AETR)
                 {
                     showcase = 1;
                     unsigned char i = 0;
@@ -206,6 +239,70 @@ void osd_setting()
                     channeltmp = channel;
                     powerleveltmp = powerlevel;
                 }
+                if(osd_count >= 200)
+                {
+                    osd_data[0] = 0x0f;
+                    osd_data[0] |=showcase << 4;
+                    osd_data[1] = aux[CHAN_5];
+                    osd_data[2] = 0;
+                    osd_data[3] = vol >> 8;
+                    osd_data[4] = vol & 0xFF;
+                    osd_data[5] = rx_switch;
+                    
+                    osd_data[6] = 0;
+                    osd_data[6] = (aux[CHAN_6] << 0) | (aux[CHAN_7] << 1) | (aux[CHAN_8] << 2);
+       
+                    osd_data[7] = 0;
+                    osd_data[8] = 0;
+                    osd_data[9] = 0;
+                #ifdef CURR_ADC
+                    osd_data[8] = cur >> 8;
+                    osd_data[9] = cur & 0xFF;
+                #endif
+                    osd_data[10] = 0;
+                    osd_data[11] = 0;
+                    for (uint8_t i = 0; i < 11; i++)
+                        osd_data[11] += osd_data[i];  
+                    
+                    UART2_DMA_Send();
+                    osd_count = 0;
+                }   
+            }
+            
+            break;
+        #else
+            case 0:
+            if(AETR)
+            {
+                showcase = 1;
+                unsigned char i = 0;
+                for(i=0; i<3; i++)
+                {
+                    pidMenu->fvalue = pidkp[i];
+                    pidMenu = pidMenu->next;
+                }
+                
+                for(i=0; i<3; i++)
+                {
+                    pidMenu->fvalue = pidki[i];
+                    pidMenu = pidMenu->next;
+                }
+                
+                for(i=0; i<3; i++)
+                {
+                    pidMenu->fvalue = pidkd[i];
+                    pidMenu = pidMenu->next;
+                }
+                
+                for(i=0; i<4; i++)
+                {
+                    motorMenu->uvalue = motorDir[i];
+                    motorMenu = motorMenu->next;
+                }
+                pidMenu = pidMenuHead;
+                motorMenu = motorMenuHead;
+                channeltmp = channel;
+                powerleveltmp = powerlevel;
             }
             if(osd_count >= 200)
             {
@@ -223,10 +320,6 @@ void osd_setting()
                 osd_data[7] = (!aux[LEVELMODE] && aux[RACEMODE]);
                 osd_data[8] = 0;
                 osd_data[9] = 0;
-            #ifdef CURR_ADC
-                osd_data[8] = cur >> 8;
-                osd_data[9] = cur & 0xFF;
-            #endif
                 osd_data[10] = 0;
                 osd_data[11] = 0;
                 for (uint8_t i = 0; i < 11; i++)
@@ -236,7 +329,7 @@ void osd_setting()
                 osd_count = 0;
             }   
             break;
-            
+        #endif
         case 1:
             getIndex();
             if((rx[Roll] > 0.6f) && right_flag == 1)
@@ -408,7 +501,7 @@ void osd_setting()
                 osd_count = 0;
             } 
             break;
-        
+     #ifdef f042_1s_bayang
         case 3:            
             getIndex();
         
@@ -421,7 +514,7 @@ void osd_setting()
                 else if(currentMenu->index ==1)
                 {
                     mode_config++;
-                    if(mode_config>4)
+                    if(mode_config>1)
                         mode_config=0;
                 }
                 else if(currentMenu->index ==2)
@@ -461,7 +554,48 @@ void osd_setting()
                 osd_count = 0;
             }
             break;
+        #else
+        case 3:            
+            getIndex();
         
+            if((rx[Roll] > 0.6f) && right_flag == 1)
+            {
+                if(currentMenu->index <4)
+                {
+                    currentMenu->uvalue = !currentMenu->uvalue;
+                    motorDir[currentMenu->index] = currentMenu->uvalue;
+                }
+                else{
+                    showcase = 1;
+                    motorMenu = motorMenuHead;
+                    currentMenu = setMenuHead;
+                } 
+                right_flag = 0;
+            }
+        
+            if(osd_count >= 200)
+            {
+                osd_data[0] =0x0f;
+                osd_data[0] |=showcase << 4;
+                osd_data[1] = currentMenu->index;
+                osd_data[2] = motorDir[0] | (motorDir[1] <<1) | (motorDir[2] << 2) | (motorDir[3] <<3);
+                osd_data[3] = 0;
+                osd_data[4] = 0;
+                osd_data[5] = 0;
+                osd_data[6] = 0;
+                osd_data[7] = 0;
+                osd_data[8] = 0;
+                osd_data[9] = 0;
+                osd_data[10] = 0;
+                osd_data[11] = 0;
+                for (uint8_t i = 0; i < 11; i++)
+                    osd_data[11] += osd_data[i];  
+                
+                UART2_DMA_Send();
+                osd_count = 0;
+            }
+            break;
+        #endif
         case 4:
             getIndex();
             
