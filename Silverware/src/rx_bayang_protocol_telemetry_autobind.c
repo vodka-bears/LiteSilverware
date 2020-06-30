@@ -436,27 +436,51 @@ static int decodepacket(void)
                 aux[CH_VID] = (rxdata[2] & 0x10) ? 1 : 0;                //7 chan 
             }
             else{
-                if(T8SG_config){
-                    aux[CH_RTH] = (rxdata[3] & 0x80)?1:0; // inverted flag   //6 chan                
-                    aux[CH_VID] = (rxdata[2] & 0x10) ? 1 : 0;                //7 chan                                       
-                    aux[CH_PIC] = (rxdata[2] & 0x20) ? 1 : 0;		             //8 chan										
-                    aux[CH_FLIP] = (rxdata[2] & 0x08) ? 1 : 0;               //0 chan
-                    aux[CH_EXPERT] = (rxdata[1] == 0xfa) ? 1 : 0;            //1 chan
-                    aux[CH_HEADFREE] = (rxdata[2] & 0x02) ? 1 : 0;           //2 chan
-                    aux[CH_INV] = (rxdata[2] & 0x01) ? 1 : 0;	// rth channel  //3chan
+                if(T8SG_config){ //Changed channel mapping for Deviation TX 
+										aux[CH_FLIP] = (rxdata[3] & 0x80)?1:0;     // Chan 5
+                    aux[CH_RTH] = (rxdata[2] & 0x08) ? 1 : 0;  // Chan 6               
+                    aux[CH_INV] = (rxdata[2] & 0x01) ? 1 : 0;	 // Chan 10
                 }
-                else{
-                    aux[CH_INV] = (rxdata[3] & 0x80)?1:0; // inverted flag   //6 chan                
-                    aux[CH_VID] = (rxdata[2] & 0x10) ? 1 : 0;                //7 chan                                       
-                    aux[CH_PIC] = (rxdata[2] & 0x20) ? 1 : 0;		             //8 chan										
-                    aux[CH_FLIP] = (rxdata[2] & 0x08) ? 1 : 0;               //0 chan
-                    aux[CH_EXPERT] = (rxdata[1] == 0xfa) ? 1 : 0;            //1 chan
-                    aux[CH_HEADFREE] = (rxdata[2] & 0x02) ? 1 : 0;           //2 chan
-                    aux[CH_RTH] = (rxdata[2] & 0x01) ? 1 : 0;	// rth channel  //3chan
-                }
+                else{ // Multiprotocol module
+										aux[CH_FLIP] = (rxdata[2] & 0x08) ? 1 : 0; // Chan 5
+                    aux[CH_INV] = (rxdata[3] & 0x80)?1:0;      // Chan 6                
+                    aux[CH_RTH] = (rxdata[2] & 0x01) ? 1 : 0;	 // Chan 10
+								}
+									
+								aux[CH_PIC] = (rxdata[2] & 0x20) ? 1 : 0;      // Chan 7
+								aux[CH_VID] = (rxdata[2] & 0x10) ? 1 : 0;      // Chan 8
+								aux[CH_HEADFREE] = (rxdata[2] & 0x02) ? 1 : 0; // Chan 9
+								aux[CH_TO] = (rxdata[3] & 0x20) ? 1 : 0;       // take off flag // Chan 12 (TX channel 11)                  
+								aux[CH_EMG] = (rxdata[3] & 0x04) ? 1 : 0;      // emg stop flag // Chan 13 (TX channel 12)
+#ifdef USE_ANALOG_AUX
+								aux[CH_EXPERT] = (rxdata[1] > 0x7F) ? 1 : 0;
+#else
+								aux[CH_EXPERT] = (rxdata[1] == 0xfa) ? 1 : 0;
+#endif
+
+#ifdef USE_ANALOG_AUX
+								// Assign all analog versions of channels based on boolean channel data
+								for (int i = 0; i < AUXNUMBER - 2; i++)
+								{
+									if (i == CH_ANA_AUX1)
+										aux_analog[CH_ANA_AUX1] = bytetodata(rxdata[1]);
+									else if (i == CH_ANA_AUX2)
+										aux_analog[CH_ANA_AUX2] = bytetodata(rxdata[13]);
+									else
+										aux_analog[i] = aux[i] ? 1.0 : 0.0;
+									aux_analogchange[i] = 0;
+									if (lastaux_analog[i] != aux_analog[i])
+										aux_analogchange[i] = 1;
+									lastaux_analog[i] = aux_analog[i];
+								}
+#endif									
+                
             }	
             
-			aux[LEDS_ON] = led_config;	
+				//DB overwrite channel value if led_config is 1	(set in the OSD menu))
+        if(led_config==1)      
+			      aux[LEDS_ON] = led_config;	
+
         #else
             aux[CH_INV] = (rxdata[3] & 0x80)?1:0; // inverted flag   //6 chan                
             aux[CH_VID] = (rxdata[2] & 0x10) ? 1 : 0;                //7 chan                                       
