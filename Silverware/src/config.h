@@ -149,7 +149,9 @@
 // *************automatically remove center bias in toy tx ( needs throttle off for 1 second )
 //#define STOCK_TX_AUTOCENTER
 
-
+// *************quick flashing LED when RSSI level drops below set level
+// *************value is packets per second for Bayang, percentage of full (2047) RSSI when RSSI is returned as channel 9 in SBUS
+#define RSSI_WARNING_LEVEL 40
 
 
 //**********************************************************************************************************************

@@ -40,6 +40,10 @@ int rgb_loopcount = 0;
 //rgb low pass filter variables 
 float r_filt, g_filt, b_filt;
 
+// warn of low RSSI through the status LED
+#ifdef RSSI_WARNING_LEVEL
+extern int rssi_warning;
+#endif
 
 // sets all leds to a brightness
 void rgb_led_set_all( int rgb )
@@ -87,7 +91,7 @@ void rgb_ledflash( int color1 , int color2 , uint32_t period , int duty )
 }
 
 // speed of movement
-float RAINBOW_SPEED = 5.0f;
+float RAINBOW_SPEED = 10.0f;
 int rgb_rainbow_phase[RGB_LED_NUMBER];
 int rgb_rainbow_colour[RGB_LED_NUMBER];
 #define rgb_decrease(amt) ((amt>0?fmax(amt-RAINBOW_SPEED,0):0))
@@ -109,7 +113,7 @@ void rgb_led_set_rainbow(int led_number)
 	int g = rgb_rainbow_colour[led_number]>>16;
 	int r = (rgb_rainbow_colour[led_number]&0x0000FF00)>>8;
 	int b = rgb_rainbow_colour[led_number] & 0xff;
-	
+		
 	switch(rgb_rainbow_phase[led_number])
 	{
 		case WHITE_PHASE:
@@ -190,7 +194,7 @@ void rgb_led_set_rainbow(int led_number)
 				}			
 			break;
 	}
-	
+		
 	rgb_rainbow_colour[led_number] = RGB(r,g,b);
 	rgb_led_set_one( led_number , rgb_rainbow_colour[led_number] );
 }
@@ -305,12 +309,22 @@ else
 				}
 			else 
 			{
-
+#ifdef RSSI_WARNING_LEVEL
+			if ( rssi_warning )
+				{
+						rgb_ledflash_twin( RGB( 255 , 0 , 0 ), RGB( 0 , 0 , 255 ), 1000000);
+				}
+			else
+				{
+#endif
 				if ( aux[LEDS_ON] )
 					rgb_rainbow();
 				//rgb_led_set_all( RGB_VALUE_INFLIGHT_ON );
 				else 			
 				rgb_led_set_all( RGB_VALUE_INFLIGHT_OFF );
+#ifdef RSSI_WARNING_LEVEL
+				}
+#endif				
 			}
 		} 		
 		

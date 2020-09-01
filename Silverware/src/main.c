@@ -145,6 +145,13 @@ int arming_release;
 int binding_while_armed = 1;
 float lipo_cell_count = 1;
 
+// warn of low RSSI through the status LED
+#ifdef RSSI_WARNING_LEVEL
+extern int rssi_warning;
+int hide_rx_mode;
+unsigned long rxblinktime = 0;
+#endif
+
 //Experimental Flash Memory Feature
 int flash_feature_1 = 0;
 int flash_feature_2 = 0;
@@ -672,7 +679,15 @@ if ( LED_NUMBER > 0)
                 }
             else
             {
-                int leds_on = !aux[LEDS_ON];
+#ifdef RSSI_WARNING_LEVEL
+							if ( rssi_warning )
+								{
+										ledflash ( 100000, 15);
+								}
+							else
+								{
+#endif
+								int leds_on = !aux[LEDS_ON];
                 if (ledcommand)
                 {
                     if (!ledcommandtime)
@@ -711,7 +726,10 @@ if ( LED_NUMBER > 0)
                     else ledon(255);
                 }
                 else ledoff(255);
-            }
+#ifdef RSSI_WARNING_LEVEL
+								}
+#endif
+						}
         }
     }
 }
@@ -822,6 +840,20 @@ rgb_dma_start();
     }
     else
     {
+#endif
+
+#ifdef RSSI_WARNING_LEVEL
+				if (rssi_warning)
+				{
+					//rxblinktime will be 0 at first
+					if (gettime() - rxblinktime > 500000 )
+					{
+							hide_rx_mode = !hide_rx_mode;
+							rxblinktime = gettime();
+					}
+				}
+				else
+					hide_rx_mode = 0;
 #endif
         osd_setting();
 
