@@ -176,7 +176,7 @@
 #define STOP_LOWBATTERY
 
 // *************voltage per cell to start warning led blinking
-#define VBATTLOW 3.1
+#define VBATTLOW 3.3
 
 // *************automatic voltage telemetry correction/calibration factor - change the values below if voltage telemetry is inaccurate
 // *************Corrects for an offset error in the telemetry measurement (same offset across the battery voltage range)
@@ -258,7 +258,7 @@
 
 // *************invert yaw pid for "PROPS OUT" configuration - This feature is switchable to "PROPS IN" when active with stick gesture DOWN-UP-DOWN, Save selection with DOWN-DOWN-DOWN
 #ifdef f042_1s_bayang
-//#define INVERT_YAW_PID
+#define INVERT_YAW_PID
 #define MOTOR_MIN_COMMAND  10.0
 #else
 #define INVERT_YAW_PID

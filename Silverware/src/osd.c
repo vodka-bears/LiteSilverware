@@ -135,7 +135,7 @@ void osd_setting()
     if (showcase_cnt < 1610)
     {
         showcase_cnt++;
-        showcase = 6;
+        showcase = 0;
     }
     else if (!showcase_init)
     {

@@ -81,9 +81,15 @@ float pidkd[PIDNUMBER] = { 5.6e-1 , 6.7e-1  , 0.5e-1 };
 
 #ifdef f042_1s_bayang
 
-float pidkp[PIDNUMBER] = {0.1438  , 0.1438  , 0.2436 };
-float pidki[PIDNUMBER] = { 1.4    , 1.4     , 1.4    };
-float pidkd[PIDNUMBER] = { 0.5666 , 0.5666  , 0.05   };
+//float pidkp[PIDNUMBER] = {0.1438  , 0.1438  , 0.2436 }; 
+//float pidki[PIDNUMBER] = { 1.4    , 1.4     , 1.4    };	
+//float pidkd[PIDNUMBER] = { 0.5666 , 0.5666  , 0.05   };
+
+//6mm & 7mm Abduction Pids for whoops (Team Alienwhoop)- set filtering ALIENWHOOP_ZERO_FILTERING or default beta filters
+//                         ROLL       PITCH     YAW
+float pidkp[PIDNUMBER] = {21.5e-2 , 21.5e-2  , 10.5e-1 }; 
+float pidki[PIDNUMBER] = { 14e-1  , 15e-1 , 15e-1 };	
+float pidkd[PIDNUMBER] = { 7.4e-1 , 7.4e-1  , 5.5e-1 };
 
 #endif
 
