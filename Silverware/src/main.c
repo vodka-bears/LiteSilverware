@@ -145,10 +145,12 @@ int arming_release;
 int binding_while_armed = 1;
 float lipo_cell_count = 1;
 
+float rssi_val = 0;
 // warn of low RSSI through the status LED
 #ifdef RSSI_WARNING_LEVEL
-extern int rssi_warning;
-int hide_rx_mode;
+//extern 
+int rssi_warning;
+int osd_rssi_warning;
 unsigned long rxblinktime = 0;
 #endif
 
@@ -848,12 +850,12 @@ rgb_dma_start();
 					//rxblinktime will be 0 at first
 					if (gettime() - rxblinktime > 500000 )
 					{
-							hide_rx_mode = !hide_rx_mode;
+							osd_rssi_warning = !osd_rssi_warning;
 							rxblinktime = gettime();
 					}
 				}
 				else
-					hide_rx_mode = 0;
+					osd_rssi_warning = 0;
 #endif
         osd_setting();
 

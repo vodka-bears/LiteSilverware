@@ -26,8 +26,9 @@ extern float pidki[PIDNUMBER];
 extern float pidkd[PIDNUMBER];
 extern int number_of_increments[3][3];
 extern unsigned long lastlooptime;
+extern float rssi_val;
 #ifdef RSSI_WARNING_LEVEL
-extern int hide_rx_mode;
+extern int osd_rssi_warning;
 #endif
 unsigned char profileAB =0;
 
@@ -187,7 +188,8 @@ void osd_setting()
                     osd_data[2] = 0;
                     osd_data[3] = vol >> 8;
                     osd_data[4] = vol & 0xFF;
-                    osd_data[5] = rx_switch;
+                    osd_data[5] = rssi_val;
+                    //osd_data[5] = rx_switch;
                     
                     osd_data[6] = 0;
                     osd_data[6] = (aux[CHAN_6] << 0);
@@ -231,11 +233,11 @@ void osd_setting()
                         pidMenu = pidMenu->next;
                     }
                     
-                for(i=0; i<4; i++)
-                {
-                    motorMenu->uvalue = motorDir[i];
-                    motorMenu = motorMenu->next;
-                }
+                    for(i=0; i<4; i++)
+                    {
+                        motorMenu->uvalue = motorDir[i];
+                        motorMenu = motorMenu->next;
+                    }
                     pidMenu = pidMenuHead;
                     motorMenu = motorMenuHead;
                     channeltmp = channel;
@@ -249,22 +251,22 @@ void osd_setting()
                     osd_data[2] = 0;
                     osd_data[3] = vol >> 8;
                     osd_data[4] = vol & 0xFF;
-#ifdef RSSI_WARNING_LEVEL
-									  osd_data[5] = (hide_rx_mode?5:rx_switch);
-#else
-										osd_data[5] = rx_switch;
-#endif              
+										osd_data[5] = rssi_val;          
                     osd_data[6] = 0;
                     osd_data[6] = (aux[CHAN_6] << 0) | (aux[CHAN_7] << 1) | (aux[CHAN_8] << 2);
        
-                    osd_data[7] = 0;
-                    osd_data[8] = 0;
+                    osd_data[7] = rssi_val;
+										osd_data[8] = 0;
                     osd_data[9] = 0;
                 #ifdef CURR_ADC
                     osd_data[8] = cur >> 8;
                     osd_data[9] = cur & 0xFF;
                 #endif
-                    osd_data[10] = 0;
+								#ifdef RSSI_WARNING_LEVEL
+									  osd_data[10] = osd_rssi_warning;
+								#else
+										osd_data[10] = 0;
+								#endif    
                     osd_data[11] = 0;
                     for (uint8_t i = 0; i < 11; i++)
                         osd_data[11] += osd_data[i];  
