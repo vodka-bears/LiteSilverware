@@ -188,20 +188,23 @@ void osd_setting()
                     osd_data[2] = 0;
                     osd_data[3] = vol >> 8;
                     osd_data[4] = vol & 0xFF;
-                    osd_data[5] = rssi_val;
-                    //osd_data[5] = rx_switch;
+                    osd_data[5] = rx_switch;
                     
                     osd_data[6] = 0;
                     osd_data[6] = (aux[CHAN_6] << 0);
        
-                    osd_data[7] = 0;
+                    osd_data[7] = rssi_val;
                     osd_data[8] = 0;
                     osd_data[9] = 0;
                 #ifdef CURR_ADC
                     osd_data[8] = cur >> 8;
                     osd_data[9] = cur & 0xFF;
                 #endif
-                    osd_data[10] = 0;
+								#ifdef RSSI_WARNING_LEVEL
+									  osd_data[10] = osd_rssi_warning;
+								#else
+										osd_data[10] = 0;
+								#endif    
                     osd_data[11] = 0;
                     for (uint8_t i = 0; i < 11; i++)
                         osd_data[11] += osd_data[i];  
