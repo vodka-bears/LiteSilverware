@@ -214,11 +214,6 @@ int main(void)
 #endif
 
 
-    extern int rx_bind_enable;
-    rx_bind_enable = 0;
-    flash_save();
-
-
     gpio_init();
 
     ledon(255);       //Turn on LED during boot so that if a delay is used as part of using programming pins for other functions, the FC does not appear inactive while programming times out
