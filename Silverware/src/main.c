@@ -63,7 +63,6 @@ void clk_init(void);
 void imu_init(void);
 extern void flash_load(void);
 void (*pFun)(void);
-extern void flash_save(void);
 extern void flash_hard_coded_pid_identifier(void);
 extern unsigned char showcase;
 extern unsigned char rx_switch;
