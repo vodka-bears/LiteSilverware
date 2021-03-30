@@ -189,7 +189,11 @@ void osd_setting()
                     osd_data[3] = vol >> 8;
                     osd_data[4] = vol & 0xFF;
                     osd_data[5] = rx_switch;
-                    
+#ifdef RSSI_WARNING_LEVEL
+									  osd_data[5] = (osd_rssi_warning?5:rx_switch);
+#else
+										osd_data[5] = rx_switch;
+#endif                        
                     osd_data[6] = 0;
                     osd_data[6] = (aux[CHAN_6] << 0);
        
@@ -254,8 +258,12 @@ void osd_setting()
                     osd_data[2] = 0;
                     osd_data[3] = vol >> 8;
                     osd_data[4] = vol & 0xFF;
-										osd_data[5] = rssi_val;          
-                    osd_data[6] = 0;
+#ifdef RSSI_WARNING_LEVEL
+									  osd_data[5] = (osd_rssi_warning?5:rx_switch);
+#else
+										osd_data[5] = rx_switch;
+#endif  
+										osd_data[6] = 0;
                     osd_data[6] = (aux[CHAN_6] << 0) | (aux[CHAN_7] << 1) | (aux[CHAN_8] << 2);
        
                     osd_data[7] = rssi_val;
